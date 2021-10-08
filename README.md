@@ -6,6 +6,8 @@ A Windows Kernel Project to practice windows kernel programming and techniques.
 - [ ] Basic Structure of a Windows Driver
 - [ ] File Filtering
 - [ ] Process Filtering
+- [ ] File Creation
+- [ ] Process Creation
 
 #### Disclaimer
 ---

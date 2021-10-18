@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31727.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Grootkit", "Grootkit.vcxproj", "{5EFFAFB0-E882-4450-859F-CB586F843A5D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GrootkitController", "..\GrootkitController\GrootkitController.vcxproj", "{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -41,6 +43,18 @@ Global
 		{5EFFAFB0-E882-4450-859F-CB586F843A5D}.Release|x86.ActiveCfg = Release|Win32
 		{5EFFAFB0-E882-4450-859F-CB586F843A5D}.Release|x86.Build.0 = Release|Win32
 		{5EFFAFB0-E882-4450-859F-CB586F843A5D}.Release|x86.Deploy.0 = Release|Win32
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Debug|ARM.ActiveCfg = Debug|Win32
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Debug|x64.ActiveCfg = Debug|x64
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Debug|x64.Build.0 = Debug|x64
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Debug|x86.ActiveCfg = Debug|Win32
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Debug|x86.Build.0 = Debug|Win32
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Release|ARM.ActiveCfg = Release|Win32
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Release|ARM64.ActiveCfg = Release|Win32
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Release|x64.ActiveCfg = Release|x64
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Release|x64.Build.0 = Release|x64
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Release|x86.ActiveCfg = Release|Win32
+		{9CC59DB0-F2E8-4DA9-A11A-895FA8C6D816}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

